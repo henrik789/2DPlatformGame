@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 905bc5945b2df41bf8fb2500b4faf6bb
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Sporting Grotesque
+  fontNames:
+  - Sporting Grotesque
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: eebf7ed4103794eb19ce5165a1facc75, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

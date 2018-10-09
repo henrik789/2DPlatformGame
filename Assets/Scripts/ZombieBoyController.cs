@@ -4,57 +4,49 @@ using UnityEngine;
 
 public class ZombieBoyController : MonoBehaviour {
 
-    public GameObject zombieBoy;
+    //public GameObject ZombieBoyPrefab;
     public float speedBoost;
+    public float followSpeed;
     private int direction = 1;
     SpriteRenderer spriteRenderer;
     Animator anim;
     Transform playerTransform;
-
+    //Transform zombie;
 
 
     void Start(){
 
+        //zombie = Instantiate(ZombieBoyPrefab).transform;
         anim = GetComponent<Animator>();
-        anim.SetInteger("State", 1);
+        anim.SetInteger("State", 0);
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
 
     }
 
+    void FixedUpdate(){
 
-
-
-
-
-    void Update(){
-
-
-        Patrol();
-
+        //Patrol();
         LayerMask layerMask = ~LayerMask.GetMask("Enemy");
-
         RaycastHit2D hit = Physics2D.Linecast(transform.position, playerTransform.position, layerMask);
 
         if (hit.collider.tag == "Player")
         {
             Follow();
-            Debug.Log("Player hit");
-        }
-        else
-        {
-            anim.SetInteger("State", 1);
+        }else if(hit.collider.tag != "Player"){
+            Patrol();
         }
 
     }
 
     void Patrol(){
 
+        anim.SetInteger("State", 1);
         Vector3 position = transform.position;
         position.x += speedBoost * direction;
         transform.position = position;
 
-        if (position.x > 6.0f || position.x < 1.3f)
+        if (position.x > 5.2f || position.x < 1.1f)
         {
             ChangeDirection();
         }
@@ -68,17 +60,28 @@ public class ZombieBoyController : MonoBehaviour {
         {
             anim.SetInteger("State", 2);
             speedBoost = 0;
-            //Destroy(gameObject);
+            //Die();
 
 
         }
     }
 
+    void Die(){
+        Color color = spriteRenderer.color;
+        color.a = 0;
+        //Destroy(gameObject);
+        //Debug.Log("Death.");
+        //anim.SetFloat("Speed", -1f);
+    }
 
     void Follow(){
 
         anim.SetInteger("State", 3);
-        transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, speedBoost * Time.deltaTime);
+
+        transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, followSpeed * Time.deltaTime);
+
+        Debug.Log("Follow ");
+
 
         //anim.SetFloat(distanceHash, Vector2.Distance(anim.transform.position, playerTransform.position));
 

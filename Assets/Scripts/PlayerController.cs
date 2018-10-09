@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour {
     Animator anim;
 
     [Tooltip("Positive integer that multiplies the vector x movement")]
-    public int speedBoost = 5;
+    public int speedBoost = 3;
     public float jumpSpeed = 600; //Amount og gravitational force applied
     bool isJumping;
     bool leftPressed, rightPressed;
