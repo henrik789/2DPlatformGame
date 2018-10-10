@@ -11,8 +11,7 @@ public class ZombieBoyController : MonoBehaviour {
     SpriteRenderer spriteRenderer;
     Animator anim;
     Transform playerTransform;
-    //Transform zombie;
-
+    public bool turnAround = false;
 
     void Start(){
 
@@ -46,6 +45,7 @@ public class ZombieBoyController : MonoBehaviour {
         position.x += speedBoost * direction;
         transform.position = position;
 
+
         if (position.x > 5.2f || position.x < 1.1f)
         {
             ChangeDirection();
@@ -58,32 +58,34 @@ public class ZombieBoyController : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            anim.SetInteger("State", 2);
-            speedBoost = 0;
-            //Die();
 
+            anim.SetInteger("State", 2);
+            SFXControllers.instance.CoinSparkle(gameObject.transform.position);
+            speedBoost = 0;
 
         }
     }
 
     void Die(){
-        Color color = spriteRenderer.color;
-        color.a = 0;
-        //Destroy(gameObject);
-        //Debug.Log("Death.");
-        //anim.SetFloat("Speed", -1f);
+
+        Destroy(gameObject);
     }
 
     void Follow(){
 
         anim.SetInteger("State", 3);
-
+        Vector3 distance = transform.position - playerTransform.position;
         transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, followSpeed * Time.deltaTime);
 
-        Debug.Log("Follow ");
+        //if (distance.x > 0){
+        //    turnAround = true;
+        //    Debug.Log("change..!");
+        //}
 
-
-        //anim.SetFloat(distanceHash, Vector2.Distance(anim.transform.position, playerTransform.position));
+        //if (turnAround == true)
+        //{
+        //    ChangeDirection();
+        //}
 
     }
 

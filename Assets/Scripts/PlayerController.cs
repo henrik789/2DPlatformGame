@@ -17,8 +17,11 @@ public class PlayerController : MonoBehaviour {
     public int speedBoost = 3;
     public float jumpSpeed = 600; //Amount og gravitational force applied
     bool isJumping;
+    bool canDoubleJump, isGrounded;
+    public float delayForDoubleJump = 0.2f;
     bool leftPressed, rightPressed;
-
+    public Transform leftBulletSpawnPosition, rightBulletSpawnPosition;
+    public GameObject leftBullet, rightBullet;
 
 
 
@@ -32,6 +35,8 @@ public class PlayerController : MonoBehaviour {
 	
 	void Update () {
 
+
+        //isGrounded = Physics2D.OverlapBox
         float playerDirection = Input.GetAxisRaw("Horizontal"); //value will return 1 for right, -1 for left or 0
         if(playerDirection != 0){
             MoveHorizontal(playerDirection);
@@ -47,6 +52,11 @@ public class PlayerController : MonoBehaviour {
             MoveHorizontal(-speedBoost);
         if (rightPressed)
             MoveHorizontal(speedBoost);
+
+        if(Input.GetButtonDown("Fire1")){
+            FireBullets();
+        }
+
 	}
 
     void MoveHorizontal(float playerSpeed){
@@ -74,7 +84,29 @@ public class PlayerController : MonoBehaviour {
         isJumping = true;
         rb.AddForce (new Vector2(0, jumpSpeed));
         anim.SetInteger("State", 2);
+        Invoke("EnableDoubleJump", delayForDoubleJump);
+        if(canDoubleJump){
 
+            rb.velocity = Vector2.zero;
+            rb.AddForce(new Vector2(0, jumpSpeed));
+            anim.SetInteger("State", 2);
+            canDoubleJump = false;
+        }
+
+    }
+
+    void FireBullets(){
+
+        if(sr.flipX)
+            Instantiate(leftBullet, leftBulletSpawnPosition.position, Quaternion.identity);
+        if(!sr.flipX)
+            Instantiate(rightBullet,rightBulletSpawnPosition.position, Quaternion.identity);
+
+
+    }
+
+    void EnableDoubleJump(){
+        canDoubleJump = true;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -90,6 +122,7 @@ public class PlayerController : MonoBehaviour {
         {
             case "Coin":
                 SFXControllers.instance.CoinSparkle(other.gameObject.transform.position);
+                Debug.Log("sparkle");
                 break;
             default:
                 break;
