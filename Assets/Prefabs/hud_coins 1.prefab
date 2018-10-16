@@ -68,6 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795cba196a1c34b658c9100a4cfe019d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  score: 0
   coinFX: 0
 --- !u!212 &212250324008446278
 SpriteRenderer:

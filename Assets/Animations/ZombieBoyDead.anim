@@ -99,8 +99,8 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
-  - time: 0.9166667
-    functionName: Die
+  - time: 0.8333333
+    functionName: Dead
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

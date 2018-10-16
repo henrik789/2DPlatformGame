@@ -28,7 +28,7 @@ public class MobileUICtrl : MonoBehaviour {
         playerController.MobileJump();
     }
 
-    //public void MobileFireBullets(){
-    //    playerController.MobileFireBullets();
-    //}
+    public void MobileFireBullets(){
+        playerController.MobileFireBullets();
+    }
 }
