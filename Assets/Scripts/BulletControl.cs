@@ -24,12 +24,17 @@ public class BulletControl : MonoBehaviour {
     {
 
 
-        if (other.gameObject.CompareTag("Enemy"))
-        {
+        if (other.gameObject.CompareTag("Enemy")){
             //Debug.Log("Shot!");
             other.gameObject.GetComponent<ZombieBoyController>().ZombieBoyDie(); 
 
 
+        }if(other.gameObject.CompareTag("ZombieGirl")){
+
+            other.gameObject.GetComponent<ZombieGirlController>().ZombieGirlDie();
+        }
+        if(other.gameObject.CompareTag("Platform")){
+            Destroy(gameObject);
         }
     }
 

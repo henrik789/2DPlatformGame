@@ -9,6 +9,10 @@ TagManager:
   - Coin
   - Key
   - Bullet
+  - ZombieGirl
+  - ZombieStop
+  - RedKey
+  - YellowKey
   layers:
   - Default
   - TransparentFX

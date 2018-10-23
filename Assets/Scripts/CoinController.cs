@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CoinController : MonoBehaviour {
 
     public CoinFX coinFX;
-    public GameManager gameManager;
+    //public GameManager gameManager;
 
     public enum CoinFX{
         Vanish, fly
@@ -25,8 +25,9 @@ public class CoinController : MonoBehaviour {
         if (other.gameObject.CompareTag("Player"))
             if (coinFX == CoinFX.Vanish)
               {
-                    gameManager.ScoreUpdate();
-                    Destroy(gameObject);
+                GameManager.Instance.ScoreUpdate();
+                    //gameManager.ScoreUpdate();
+                 Destroy(gameObject);
               }
     }
 

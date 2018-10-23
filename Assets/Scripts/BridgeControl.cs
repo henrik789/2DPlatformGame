@@ -24,7 +24,7 @@ public class BridgeControl : MonoBehaviour
         transform.position = position;
 
 
-        if (position.y > 17f || position.y < 5f)
+        if (position.y > 5f || position.y < -5.5f)
         {
             direction *= -1;
         }

@@ -9,28 +9,52 @@ public class ZombieGirlController : MonoBehaviour
     private int direction = 1;
     SpriteRenderer spriteRenderer;
     Animator anim;
-
+    public float followSpeed;
+    Transform playerTransform;
+    public bool turnAround = false, zombieGirlAlive = true;
 
 
     void Start()
     {
 
         anim = GetComponent<Animator>();
-        //anim.SetInteger("State", 1);
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
 
     void Update()
     {
 
+        LayerMask layerMask = ~LayerMask.GetMask("Enemy");
+        if (playerTransform != null)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, playerTransform.position, layerMask);
+
+            if (hit.collider.tag == "Player")
+            {
+                Follow();
+            }
+            else if (hit.collider.tag != "Player")
+            {
+                Patrol();
+            }
+        }
+    }
+
+    void Patrol()
+    {
+        if (zombieGirlAlive)
+        {
+            anim.SetInteger("State", 0);
+        }
 
         Vector3 position = transform.position;
         position.x += speedBoost * direction;
         transform.position = position;
 
-        if (position.x > 62.1f || position.x < 53.7f)
+
+        if (position.x > 100f || position.x < 95.5f)
         {
             ChangeDirection();
         }
@@ -38,17 +62,40 @@ public class ZombieGirlController : MonoBehaviour
     }
 
 
+    public void ZombieGirlDie()
+    {
+        Debug.Log("Shot!");
+        zombieGirlAlive = false;
+        {
+            speedBoost = 0;
+            anim.SetInteger("State", 2);
+        }
+    }
 
-    //private void OnCollisionEnter2D(Collision2D other)
-    //{
-    //    if (other.gameObject.CompareTag("Player"))
-    //    {
-    //        anim.SetInteger("State", 2);
-    //        speedBoost = 0;
+    void Dead()
+    {
+        Destroy(gameObject);
+    }
 
+    void Follow()
+    {
+        if (zombieGirlAlive)
+        {
+            anim.SetInteger("State", 3);
+        }
 
-    //    }
-    //}
+        Vector3 distance = transform.position - playerTransform.position;
+        transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, followSpeed * Time.deltaTime);
+
+        if (distance.x > 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
+    }
 
 
 
@@ -66,5 +113,6 @@ public class ZombieGirlController : MonoBehaviour
             spriteRenderer.flipX = false;
         }
     }
+
 
 }

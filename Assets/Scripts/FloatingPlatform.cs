@@ -21,7 +21,7 @@ public class FloatingPlatform : MonoBehaviour {
         transform.position = position;
 
 
-        if (position.x > 66f || position.x < 58f)
+        if (position.x > 122f || position.x < 118f)
         {
             direction *= -1;
         }

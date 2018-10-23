@@ -3,28 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+
 /// <summary>
 /// For controlling the player movementand animations
 /// </summary>
 
 public class PlayerController : MonoBehaviour
 {
-
+    public LIfeController lIfeController;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator anim;
-
+    //public GameManager gameManager;
     [Tooltip("Positive integer that multiplies the vector x movement")]
-    public int speedBoost = 3;
-    public float jumpSpeed = 600; //Amount of uplift applied
+    public int speedBoost;
+    public float jumpSpeed; //Amount of uplift applied
     bool isJumping;
-    bool canDoubleJump, isGrounded;
+    public bool isGrounded, levelDone = false;
     public float delayForDoubleJump = 0.2f;
     bool leftPressed, rightPressed;
     public Transform leftBulletSpawnPosition, rightBulletSpawnPosition;
     public GameObject leftBullet, rightBullet;
-    bool playerAlive = true;
-   
+    bool playerAlive = true, canFireBullets = false;
+    public int numberOfJumps = 0;
+    private int maxJumps = 2;
+
 
     void Start()
     {
@@ -60,9 +63,12 @@ public class PlayerController : MonoBehaviour
             if (rightPressed)
                 MoveHorizontal(speedBoost);
 
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire1") && canFireBullets)
             {
                 FireBullets();
+            }
+            if(levelDone){
+            GameManager.Instance.LevelCompleted();   
             }
 
     }
@@ -98,17 +104,20 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         isJumping = true;
+        if(isGrounded){
+            numberOfJumps = 0;
+        }
         rb.AddForce(new Vector2(0, jumpSpeed));
         if(playerAlive)
         anim.SetInteger("State", 2);
-        Invoke("EnableDoubleJump", delayForDoubleJump);
-        if (canDoubleJump)
+        if (isGrounded || numberOfJumps < maxJumps)
         {
 
             rb.velocity = Vector2.zero;
             rb.AddForce(new Vector2(0, jumpSpeed));
-           // anim.SetInteger("State", 2);
-            canDoubleJump = false;
+            numberOfJumps += 1;
+            isGrounded = false;
+
         }
 
     }
@@ -124,21 +133,20 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void EnableDoubleJump()
-    {
-        canDoubleJump = true;
-    }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Platform")){
             isJumping = false;
+            isGrounded = true;
         }
-        else if(other.gameObject.CompareTag("Enemy")){
+        else if(other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("ZombieGirl"))
+        {
+            GameManager.Instance.LooseOneLife();
             playerAlive = false;
             anim.SetInteger("State", 4);
             Debug.Log("killed");
-            //PlayerDead();
+
         }
 
     }
@@ -151,6 +159,20 @@ public class PlayerController : MonoBehaviour
                 SFXControllers.instance.CoinSparkle(other.gameObject.transform.position);
                 //Debug.Log("sparkle");
                 break;
+            case "Enemy":
+                playerAlive = false;
+                anim.SetInteger("State", 4);
+                Debug.Log("killed");
+                break;
+            case "Platform":
+                SFXControllers.instance.PlayerLands(other.gameObject.transform.position);
+                break;
+            case "RedKey":
+                canFireBullets = true;
+                break;
+            case "YellowKey":
+                levelDone = true;
+                break;
             default:
                 break;
         }
@@ -160,6 +182,7 @@ public class PlayerController : MonoBehaviour
     void PlayerDead(){
 
         Destroy(gameObject);
+
     }
 
     public void MobileMoveLeft()

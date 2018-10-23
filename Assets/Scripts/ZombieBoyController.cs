@@ -11,7 +11,7 @@ public class ZombieBoyController : MonoBehaviour {
     SpriteRenderer spriteRenderer;
     Animator anim;
     Transform playerTransform;
-    public bool turnAround = false, zombieBoyAlive = true;
+    public bool zombieBoyAlive = true;
 
     void Start(){
 
@@ -57,39 +57,21 @@ public class ZombieBoyController : MonoBehaviour {
 
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log("Shot!");
+    //private void OnTriggerEnter2D(Collider2D other){
 
-    //    if (other.gameObject.CompareTag("Bullet"))
-    //    {
-    //        Debug.Log("Shot!");
-    //        anim.SetInteger("State", 2);
-    //        speedBoost = 0;
-
+    //    if(other.gameObject.CompareTag("ZombieStop")){
+    //        Debug.Log("collide.........");
+    //        Patrol();
     //    }
     //}
 
-    //private void OnCollisionEnter2D(Collision2D other)
-    //{
-    //    if (other.gameObject.CompareTag("Bullet"))
-    //    {
 
-    //        anim.SetInteger("State", 2);
-    //        //SFXControllers.instance.MagicRing1(gameObject.transform.position);
-    //        speedBoost = 0;
-
-    //    }
-    //}
-
-     public void ZombieBoyDie(){
+    public void ZombieBoyDie(){
         Debug.Log("Shot!");
         zombieBoyAlive = false;{
+            speedBoost = 0;
             anim.SetInteger("State", 2);
         }
-
-        speedBoost = 0;
-
      }
 
     void Dead(){
@@ -97,28 +79,25 @@ public class ZombieBoyController : MonoBehaviour {
     }
 
     void Follow(){
-        if(zombieBoyAlive){
+
+        if (zombieBoyAlive){
             anim.SetInteger("State", 3);
         }
+            Vector3 distance = transform.position - playerTransform.position;
+            transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, followSpeed * Time.deltaTime);
         
-        Vector3 distance = transform.position - playerTransform.position;
-        transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, followSpeed * Time.deltaTime);
 
-        if (distance.x > 0)
-        {
+        if (distance.x > 0){
             spriteRenderer.flipX = true;
         }else {
             spriteRenderer.flipX = false;
         }
 
-
-
     }
 
 
 
-    void ChangeDirection()
-    {
+    void ChangeDirection(){
 
         direction *= -1;
 
